@@ -1,0 +1,10 @@
+add_requires("sfml")
+
+target("a")
+  set_languages("c++23")
+  set_kind("binary")
+  add_files("src/*.cpp")
+  add_files("src/*.cppm")
+  set_extension(".out")
+  set_policy("build.c++.modules", true)
+  add_packages("sfml")

@@ -1,0 +1,18 @@
+{
+"rules": [
+{
+"primary-output": "build/.objs/a/linux/x86_64/release/src/main.cpp.o",
+"requires": [
+{
+"logical-name": "std"
+}
+,
+{
+"logical-name": "UserInputState"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}
