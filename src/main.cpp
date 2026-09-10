@@ -18,12 +18,12 @@ int main(int argc, char const *argv[]) {
       if (event->is<sf::Event::TextEntered>()) {
         inputState.addChar(event->getIf<sf::Event::TextEntered>()->unicode);
         // inputState.print();
-        ui.updateText(inputState.getText());
+        ui.updateText(inputState);
       }
       if (event->is<sf::Event::KeyPressed>()) {
         if (inputState.addControl(event->getIf<sf::Event::KeyPressed>()->code)) {
           // inputState.print();
-          ui.updateText(inputState.getText());
+          ui.updateText(inputState);
         }
       }
     }

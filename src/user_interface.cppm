@@ -2,6 +2,7 @@ module;
 #include <SFML/Graphics.hpp>
 export module UserInterface;
 import std;
+import UserInputState;
 
 #define FONT_SIZE 20
 #define CURSOR_WIDTH 2
@@ -29,15 +30,15 @@ export class UserInterface final {
   /**
    * @brief      Update the visuals of the search bar
    *
-   * @param[in]  text  The new text 
+   * @param[in]  state  The state of the user input text
    */
-  void updateText(std::pair<sf::String, std::size_t> text) {
+  void updateText(const UserInputState& state) {
     // Update the search text to reflect the new input
-    _searchText.setString(text.first);
+    _searchText.setString(state.getText());
 
     // Get the index of the glyph representing the character currently selected
     // by the cursor
-    std::size_t glyphIndex = text.second;
+    std::size_t glyphIndex = state.getCursorIndex();
 
     // If we are at the zero-th position then skip cursor positioning
     // calculations
@@ -56,7 +57,6 @@ export class UserInterface final {
       currGlyph.glyph.bounds.size.x;
     _searchCursor.setPosition({cursorPos, _searchText.getPosition().y});
 
-    // WILL PROBABLY REMOVE LATER
     // Update the window
     update();
   }
