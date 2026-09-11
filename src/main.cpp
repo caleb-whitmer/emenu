@@ -6,7 +6,8 @@ import SearchBar;
 int main(int argc, char const *argv[]) {
 
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Main Window", sf::Style::None);
-  SearchBar search(window);
+  sf::Font font("/usr/share/fonts/gnu-free/FreeSans.otf");
+  SearchBar search(window, font, 20/*font size*/, {});
 
   while (window.isOpen()) {
     while (const std::optional event = window.pollEvent()) {
@@ -19,7 +20,7 @@ int main(int argc, char const *argv[]) {
         search.update();
       }
       if (event->is<sf::Event::KeyPressed>()) {
-        search.input(event->getIf<sf::Event::KeyPressed>()->code);
+        search.control(event->getIf<sf::Event::KeyPressed>()->code);
         search.update();
       }
     }

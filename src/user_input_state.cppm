@@ -73,37 +73,48 @@ export class UserInputState final {
    * @param[in]  c     A character encoded in UTF-32 Unicode
    */
   void addChar(char32_t c) {
-    // If the character is graphical or is a space and there is room to insert
-    // the new character
-    if ((std::isgraph(c) or std::isspace(c)) and !_isTextFull()) {
+    // If the character is graphical and there is room to insert the new
+    // character
+    if (std::isgraph(c) and !_isTextFull()) {
       // Place the character at the cursor before incrementing
       _placeAtCursor(c);
       _incrementCursor();
       return;
     }
 
+    // Handle special non-graphical characters
     switch (c) {
     case BACKSPACE:
       if (CONTROL_PRESSED) {
+        // If control key is pressed delete an entire word back
         std::size_t s = _decrementCursorWord();
         _deleteAfterCursor(s);
         break;
       }
-      // Decrement the cursor and then remove the character it is selecting
+
+      // Otherwise, decrement the cursor and then remove the character it is
+      // selecting
       _decrementCursor();
       _deleteAfterCursor();
       break;
+    case SPACE:
+      // Break if the text is already full
+      if (_isTextFull()) break;
+      // Otherwise insert a space character
+      _placeAtCursor(c);
+      _incrementCursor();
+      break;
     case DELETE:
       if (CONTROL_PRESSED) {
+        // If control key is pressed delete an entire word
         std::size_t i = getCursorIndex();
         std::size_t s = _incrementCursorWord();
         setCursorIndex(i);
         _deleteAfterCursor(s);
-
-
         break;
       }
-      // Remove the character after the cursor
+
+      // Otherwise, remove the character after the cursor
       _deleteAfterCursor();
       break;
     }
@@ -258,7 +269,7 @@ export class UserInputState final {
     return _text_state_end[0];
   }
 
-  enum Key { BACKSPACE=0x08, DELETE=0x7F };
+  enum Key { BACKSPACE=0x08, ENTER=0x0A, SPACE=0x20, DELETE=0x7F };
   char32_t _text_state[TEXT_MAX_LENGTH] = { 0 };
   char32_t* _text_state_end = &_text_state[TEXT_MAX_LENGTH-2];
   // Subtract two from the max length to leave room for null-terminator at end
