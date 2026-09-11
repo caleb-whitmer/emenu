@@ -1,13 +1,12 @@
 #include <SFML/Graphics.hpp>
 
 import std;
-import UserInputState;
-import UserInterface;
+import SearchBar;
 
 int main(int argc, char const *argv[]) {
-  sf::RenderWindow window(sf::VideoMode({800, 600}), "Main Window");
-  UserInputState inputState;
-  UserInterface ui(window);
+
+  sf::RenderWindow window(sf::VideoMode({800, 600}), "Main Window", sf::Style::None);
+  SearchBar search(window);
 
   while (window.isOpen()) {
     while (const std::optional event = window.pollEvent()) {
@@ -16,15 +15,12 @@ int main(int argc, char const *argv[]) {
         window.close();
       }
       if (event->is<sf::Event::TextEntered>()) {
-        inputState.addChar(event->getIf<sf::Event::TextEntered>()->unicode);
-        // inputState.print();
-        ui.updateText(inputState);
+        search.input(event->getIf<sf::Event::TextEntered>()->unicode);
+        search.update();
       }
       if (event->is<sf::Event::KeyPressed>()) {
-        if (inputState.addControl(event->getIf<sf::Event::KeyPressed>()->code)) {
-          // inputState.print();
-          ui.updateText(inputState);
-        }
+        search.input(event->getIf<sf::Event::KeyPressed>()->code);
+        search.update();
       }
     }
   }

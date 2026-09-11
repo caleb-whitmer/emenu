@@ -1,6 +1,6 @@
 module;
 #include <SFML/Graphics.hpp>
-export module UserInterface;
+export module SearchBar;
 import std;
 import UserInputState;
 
@@ -9,9 +9,9 @@ import UserInputState;
 #define SEARCH_TEXT_POS {40, 40}
 #define SEARCH_TEXT_COLOR sf::Color::Black
 
-export class UserInterface final {
+export class SearchBar final {
  public:
-  UserInterface(sf::RenderWindow& window)
+  SearchBar(sf::RenderWindow& window)
   : _window{&window}, 
     _font{"/usr/share/fonts/gnu-free/FreeSans.otf"},
     _searchText{_font, "", FONT_SIZE},
@@ -28,17 +28,48 @@ export class UserInterface final {
   }
 
   /**
-   * @brief      Update the visuals of the search bar
+   * @brief      Input a character to the search bar
    *
-   * @param[in]  state  The state of the user input text
+   * @param[in]  c     The character to be inputted
    */
-  void updateText(const UserInputState& state) {
+  void input(char32_t c) {
+    _state.addChar(c);
+    _updateText();
+  }
+
+  /**
+   * @brief      Input a control key to the search bar (i.e. arrow keys)
+   *
+   * @param[in]  k     The key to be inputted
+   */
+  void input(sf::Keyboard::Key k) {
+    if (_state.addControl(k))
+      _updateText();
+  }
+
+  /**
+   * @brief      Update the user interface
+   */
+  void update() {
+    _window->clear(sf::Color::White);
+
+    _window->draw(_searchText);
+    _window->draw(_searchCursor);
+
+    _window->display();
+  }
+ private:
+  
+  /**
+   * @brief      Update the text stored in the search bar
+   */
+  void _updateText() {
     // Update the search text to reflect the new input
-    _searchText.setString(state.getText());
+    _searchText.setString(_state.getText());
 
     // Get the index of the glyph representing the character currently selected
     // by the cursor
-    std::size_t glyphIndex = state.getCursorIndex();
+    std::size_t glyphIndex = _state.getCursorIndex();
 
     // If we are at the zero-th position then skip cursor positioning
     // calculations
@@ -56,23 +87,9 @@ export class UserInterface final {
       currGlyph.position.x +
       currGlyph.glyph.bounds.size.x;
     _searchCursor.setPosition({cursorPos, _searchText.getPosition().y});
-
-    // Update the window
-    update();
   }
 
-  /**
-   * @brief      Update the user interface
-   */
-  void update() {
-    _window->clear(sf::Color::White);
-
-    _window->draw(_searchText);
-    _window->draw(_searchCursor);
-
-    _window->display();
-  }
- private:
+  UserInputState _state;
   sf::RenderWindow* _window;
   const sf::Font _font;
   sf::Text _searchText;
