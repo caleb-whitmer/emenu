@@ -5,24 +5,21 @@ import std;
 import UserInputState;
 import TextBox;
 
-// #define FONT_SIZE 20
 #define CURSOR_WIDTH 2
-#define SEARCH_TEXT_POS {40, 40}
-#define SEARCH_TEXT_COLOR sf::Color::Black
 
-export class EntryBox final : public TextBox {
+export class EntryBox : public TextBox {
  public: 
-  EntryBox(  const sf::Font& font,
-              unsigned fontSize, 
-              unsigned width,
-              sf::Vector2f padding,
-              sf::Color fgColor,
-              sf::Color bgColor,
-              sf::String text  ) 
+  EntryBox( const sf::Font& font,
+            unsigned fontSize, 
+            unsigned width,
+            sf::Vector2f padding,
+            sf::Color fgColor,
+            sf::Color bgColor,
+            sf::String text ) 
   : TextBox{font, fontSize, width, padding, fgColor, bgColor, text},
     _searchCursor{{CURSOR_WIDTH, static_cast<float>(fontSize)}} {
 
-    _searchCursor.setFillColor(SEARCH_TEXT_COLOR);
+    _searchCursor.setFillColor(fgColor);
   }
 
   /**
@@ -32,7 +29,9 @@ export class EntryBox final : public TextBox {
    */
   void input(char32_t c) {
     _state.addChar(c);
-    _updateSearch();
+    _updateEntry();
+
+    onTextUpdate();
   }
 
   /**
@@ -42,12 +41,11 @@ export class EntryBox final : public TextBox {
    */
   void control(sf::Keyboard::Key k) {
     if (_state.addControl(k))
-      _updateSearch();
+      _updateEntry();
   }
 
- private:
-  UserInputState _state;
-  sf::RectangleShape _searchCursor;
+ protected:
+  virtual void onTextUpdate() {}
 
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
     // Draw the textbox
@@ -58,11 +56,15 @@ export class EntryBox final : public TextBox {
     states.transform.translate(this->padding);
     target.draw(_searchCursor, states);
   }
+
+ private:
+  UserInputState _state;
+  sf::RectangleShape _searchCursor;
   
   /**
    * @brief      Update the text stored in the entry box
    */
-  void _updateSearch() {
+  void _updateEntry() {
     // Update the search text to reflect the new input
     this->setString(_state.getText());
 
@@ -86,9 +88,5 @@ export class EntryBox final : public TextBox {
       currGlyph.position.x +
       currGlyph.glyph.bounds.size.x;
     _searchCursor.setPosition({cursorPos, this->foreground.getPosition().y});
-
-    /**
-     * Fuzzy search stuff here
-     */
   }
 };

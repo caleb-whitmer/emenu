@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 import std;
-import EntryBox;
+import SearchBox;
 
 int main(int argc, char const *argv[]) {
   /**
@@ -12,13 +12,15 @@ int main(int argc, char const *argv[]) {
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Main Window", sf::Style::None);
   sf::Font font("/usr/share/fonts/gnu-free/FreeSans.otf");
 
-  EntryBox entry( font, 
-                  20/*font size*/, 
-                  600/*width*/, 
-                  {5, 5}/*padding*/, 
-                  sf::Color::Black/*forground color*/, 
-                  sf::Color::Cyan/*background color*/, 
-                  ""/*starting text*/);
+  SearchBox entry(  font, 
+                    20/*font size*/, 
+                    600/*width*/, 
+                    {5, 5}/*padding*/, 
+                    sf::Color::Black/*forground color*/, 
+                    sf::Color::Cyan/*background color*/, 
+                    ""/*starting text*/,
+                    {}/*lines*/,
+                    4/*line count*/  );
   entry.setPosition({40, 40});
   window.clear(sf::Color::White);
   window.draw(entry);
