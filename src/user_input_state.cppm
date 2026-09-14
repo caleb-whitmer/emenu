@@ -246,14 +246,15 @@ export class UserInputState final {
    */
   std::size_t _decrementCursorWord() {
     char32_t* csave = _cursor;
-    do {
-      // Check for string beginning early
-      if (_cursor <= _text_state) break;
-      // Otherwise decrement the cursor until a space will be reached.
+
+    // As long as the cursor is not at the beginning of the text
+    while (_cursor > _text_state) {
+      // If the cursor has already moved and the character behind it is a space
+      // character then break
+      if (csave != _cursor and std::isspace(_cursor[-1])) break;
+      // Otherwise decrement the character
       --_cursor;
-    }  while(!std::isspace(_cursor[-1]));
-    // We can check the previous character here because the early check will
-    // prevent us from checking outside the bounds of the string
+    }
 
     // Return the number of characters decremented
     return csave - _cursor;
