@@ -4,7 +4,7 @@ export module FuzzySort;
 import std;
 
 /**
- * @brief      Compares to characters with a case sensitive equality check
+ * @brief      Compares two characters with a case sensitive equality check
  *
  * @param[in]  a     character
  * @param[in]  b     character
@@ -16,7 +16,7 @@ bool charCmpSensitive(char32_t a, char32_t b) {
 }
 
 /**
- * @brief      Compares to characters with a case insensitive equality check
+ * @brief      Compares two characters with a case insensitive equality check
  *
  * @param[in]  a     character
  * @param[in]  b     character
