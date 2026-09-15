@@ -19,8 +19,8 @@ int main(int argc, char const *argv[]) {
                     sf::Color::Black/*forground color*/, 
                     sf::Color::Cyan/*background color*/, 
                     ""/*starting text*/,
-                    {}/*lines*/,
-                    4/*line count*/  );
+                    {"a", "b", "c"}/*lines*/,
+                    10/*line count*/  );
   entry.setPosition({40, 40});
   window.clear(sf::Color::White);
   window.draw(entry);
