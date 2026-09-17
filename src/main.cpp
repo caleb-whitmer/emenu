@@ -70,7 +70,22 @@ int main(int argc, char const *argv[]) {
         redraw(window, {entry});
       }
       if (event->is<sf::Event::KeyPressed>()) {
-        entry.control(event->getIf<sf::Event::KeyPressed>()->code);
+        // Get the keycode associated the the event
+        auto code = event->getIf<sf::Event::KeyPressed>()->code;
+
+        // Intercept the code to determine if it is the enter or escape keys
+        switch (code) {
+        // In the case that the enter key is pressed, print the selected line to
+        // stdout
+        case sf::Keyboard::Key::Enter:
+          std::cout << entry.getSelection().toAnsiString() << std::endl;
+        // In both cases close the window and return success
+        case sf::Keyboard::Key::Escape:
+          window.close();
+          return 0;
+        }
+
+        entry.control(code);
         redraw(window, {entry});
       }
     }
