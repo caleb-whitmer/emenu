@@ -15,8 +15,9 @@ export class EntryBox : public TextBox {
             sf::Vector2f padding,
             sf::Color fgColor,
             sf::Color bgColor,
-            sf::String text ) 
-  : TextBox{font, fontSize, width, padding, fgColor, bgColor, text},
+            sf::String prompt = "",
+            sf::Color promptColor = sf::Color::Black ) 
+  : TextBox{font, fontSize, width, padding, fgColor, bgColor, prompt, promptColor},
     _searchCursor{{CURSOR_WIDTH, static_cast<float>(fontSize)}} {
 
     _searchCursor.setFillColor(fgColor);

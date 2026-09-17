@@ -10,10 +10,14 @@ export class TextBox : public sf::Drawable, public sf::Transformable {
             sf::Vector2f padding,
             sf::Color fgColor,
             sf::Color bgColor,
-            sf::String text  )
+            const sf::String& prompt = "", 
+            sf::Color promptColor = sf::Color::Black )
   : _foreground{font, "|", fontSize}, // Kinda screwy. I need to initiate it 
                                       // with a full height character to 
                                       // calculate the correction offset
+    _prompt{prompt},
+    _promptColor{promptColor},
+    _fgColor{fgColor},
     _padding{padding} {
 
 
@@ -22,7 +26,7 @@ export class TextBox : public sf::Drawable, public sf::Transformable {
                             _foreground.getGlobalBounds().position;
 
     // Set the actual text of the textbox
-    _foreground.setString(text);
+    _foreground.setString(prompt);
 
     // Calculate the size of the background based on the height of the text and
     // desired with as well as desired padding
@@ -31,7 +35,7 @@ export class TextBox : public sf::Drawable, public sf::Transformable {
       (2.0f * padding.y) + fontSize});
 
     // Set colors
-    _foreground.setFillColor(fgColor);
+    _foreground.setFillColor(promptColor);
     _background.setFillColor(bgColor);
   }
 
@@ -59,7 +63,22 @@ export class TextBox : public sf::Drawable, public sf::Transformable {
    * @param[in]  str   The new string to insert
    */
   inline void setString(const sf::String& str) {
-    _foreground.setString(str);
+    if (str.getSize()) {
+      _foreground.setString(str);
+      _foreground.setFillColor(_fgColor);
+      return;
+    }
+
+    _foreground.setString(_prompt);
+    _foreground.setFillColor(_promptColor);
+  }
+
+  inline void setForgroundColor(sf::Color color) {
+    _foreground.setFillColor(color);
+  }
+
+  inline void setBackgroundColor(sf::Color color) {
+    _background.setFillColor(color);
   }
 
  protected:
@@ -87,4 +106,7 @@ export class TextBox : public sf::Drawable, public sf::Transformable {
   sf::RectangleShape _background;
   sf::Vector2f _textCorrectionOffset;
   sf::Vector2f _padding;
+  sf::String _prompt;
+  sf::Color _fgColor;
+  sf::Color _promptColor;
 };

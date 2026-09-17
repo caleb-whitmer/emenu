@@ -1,36 +1,8 @@
 module;
 #include <SFML/System/String.hpp>
 export module FuzzySort;
+import Settings;
 import std;
-
-export namespace FuzzySort {
-
-/**
- * @brief      Compares two characters with a case sensitive equality check
- *
- * @param[in]  a     character
- * @param[in]  b     character 
- *
- * @return     returns true if that characters match and false otherwise
- */
-bool Sensitive(char32_t a, char32_t b) {
-  return a == b;
-}
-
-/**
- * @brief      Compares two characters with a case insensitive equality check
- *
- * @param[in]  a     character
- * @param[in]  b     character
- *
- * @return     returns true if the letters are the same or the characters match
- *             and false otherwise
- */
-bool Insensitive(char32_t a, char32_t b) {
-  return std::toupper(a) == std::toupper(b);
-}
-
-};
 
 /**
  * @brief      Find the Levenshtein distance between two strings
@@ -45,8 +17,7 @@ bool Insensitive(char32_t a, char32_t b) {
  */
 unsigned __levDist( const sf::String& x, 
                     const sf::String& y, 
-                    std::function<bool(char32_t, char32_t)> charMatch = 
-                      FuzzySort::Sensitive ) {
+                    Case charMatch = Case::Sensitive ) {
   // Generate an array of the length of the string x +1 for the empty sub-string
   std::vector<unsigned> row(x.getSize() + 1, {});
 
@@ -109,8 +80,7 @@ unsigned __levDist( const sf::String& x,
  */
 unsigned __localLevDist(  const sf::String& x, 
                           const sf::String& y, 
-                          std::function<bool(char32_t, char32_t)> charMatch = 
-                          FuzzySort::Sensitive ) {
+                          Case charMatch = Case::Sensitive ) {
   // Generate an array of the length of the string x +1 for the empty sub-string
   std::vector<unsigned> row(x.getSize() + 1, {});
 
@@ -163,8 +133,7 @@ unsigned __localLevDist(  const sf::String& x,
  */
 export std::function<bool(const sf::String&, const sf::String&)> 
   fuzzyCmp( const sf::String& pattern, 
-            std::function<bool(char32_t, char32_t)> charCmp = 
-              FuzzySort::Sensitive) {
+            Case charCmp = Case::Sensitive) {
 
   return [&](const sf::String& a, const sf::String& b){
     // Get the local Levenshtein distances of the two given strings
