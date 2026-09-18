@@ -25,30 +25,18 @@ int main(int argc, char const *argv[]) {
    * KNOWN BUGS:
    * - Pressing two keys at the exact same time causes it to crash
    */
+  
+  // Read lines from stdin as options
+  std::vector<sf::String> options;
+  std::string tmp;
+  while(std::getline(std::cin, tmp)) {
+    options.push_back(tmp);
+  }
 
+  // Settings settings("/usr/share/fonts/gnu-free/FreeSans.otf");
+  Settings settings;
 
-  std::vector<sf::String> text{
-    "hello",
-    "woman",
-    "world",
-    "this",
-    "man",
-    "ghost",
-    "is",
-    "e",
-    "a",
-    "test",
-    "mansion",
-    "demon",
-    "ghoul",
-    "space"
-  };
-
-  sf::Font font("/usr/share/fonts/gnu-free/FreeSans.otf");
-
-  Settings settings(font);
-
-  SearchBox entry(settings, std::move(text));
+  SearchBox entry(settings, std::move(options));
 
 
   sf::RenderWindow window(

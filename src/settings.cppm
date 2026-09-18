@@ -1,6 +1,8 @@
 module;
 #include <SFML/Graphics.hpp>
+#include "ProggyClean.h"
 export module Settings;
+import std;
 
 /**
  * @brief      Origin setting for positioning objects
@@ -59,9 +61,13 @@ export struct Case final : public std::function<bool(char32_t, char32_t)> {
 };
 
 export struct Settings {
-  Settings(const sf::Font& font_) : font{font_} {}
-  std::reference_wrapper<const sf::Font> font;
+  Settings()
+  : font{ProggyClean_ttf_raw, ProggyClean_ttf_raw_len} {}
 
+  Settings(const std::filesystem::path& fontPath) 
+  : font{fontPath} {}
+
+  const sf::Font font           ;
   unsigned fontSize             {14};
   unsigned width                {600};
   sf::Vector2f padding          {16, 6};
