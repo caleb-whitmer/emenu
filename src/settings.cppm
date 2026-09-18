@@ -67,8 +67,8 @@ export struct Settings {
   Settings(const std::filesystem::path& fontPath) 
   : font{fontPath} {}
 
-  const sf::Font font           ;
-  unsigned fontSize             {14};
+  sf::Font font                 ;
+  unsigned fontSize             {20};
   unsigned width                {600};
   sf::Vector2f padding          {16, 6};
   sf::Vector2i position         {0, 0};

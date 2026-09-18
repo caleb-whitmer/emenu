@@ -20,12 +20,57 @@ void redraw(  sf::RenderWindow& window,
   window.display();
 }
 
+/**
+ * @brief      Hash a C string for enum purposes; Constexpr for compile time
+ *             hashing to prevent extra processing at run time
+ *
+ * @param[in]  sp    The pointer to the string
+ * @param[in]  hash  The offset basis
+ *
+ * @return     A 32 bit hash associated with the given string
+ */
+constexpr uint32_t hash(const char* sp, uint32_t hash_ = 2166136261) {
+  // FNV-1a hashing algorithm (recursive approach)
+  constexpr static uint32_t fnv_prime = 16777619;
+  // Return the hash when the null-terminator is detected
+  if ('\0' != *sp) return hash_;
+  hash_ ^= *sp;
+  hash_ *= fnv_prime;
+  return hash(++sp, hash_);
+}
+
+/**
+ * KNOWN BUGS:
+ * - Pressing two keys at the exact same time causes it to crash
+ * 
+ * TODO:
+ * - dmenu backwards compatibility w/flags
+ * - Page up / Page down / Tab / other keys
+ * - Original lexicographical search implementation
+ * 
+ * https://linux.die.net/man/1/dmenu
+ */
 int main(int argc, char const *argv[]) {
-  /**
-   * KNOWN BUGS:
-   * - Pressing two keys at the exact same time causes it to crash
-   */
-  
+  // Declare a settings var
+  Settings settings;
+  // Settings settings("/usr/share/fonts/gnu-free/FreeSans.otf");
+
+  // Loop through all arguments
+  for (int ca = 1; ca < argc; ++ca) {
+    switch(hash(argv[ca])) {
+    case hash("-l"):
+      // Early read of next argument which is the actual line count
+      if (++ca < argc) {
+        std::sscanf(argv[ca], "%u", &settings.lineCount);
+        break;
+      }
+    default:
+      std::cout << "help msg here" << std::endl;
+      return 0;
+    }
+  }  
+
+
   // Read lines from stdin as options
   std::vector<sf::String> options;
   std::string tmp;
@@ -33,11 +78,7 @@ int main(int argc, char const *argv[]) {
     options.push_back(tmp);
   }
 
-  // Settings settings("/usr/share/fonts/gnu-free/FreeSans.otf");
-  Settings settings;
-
   SearchBox entry(settings, std::move(options));
-
 
   sf::RenderWindow window(
     sf::VideoMode(static_cast<sf::Vector2u>(entry.getSize())), 
